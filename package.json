@@ -3,11 +3,12 @@
 	"version": "1.0.30",
 	"description": "MongoDB for inSite",
 	"type": "module",
-	"main": "./lib/index.js",
-	"module": "./lib/index.js",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
 	"packageManager": "yarn@1.22.22",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "node .conveyer"
 	},
 	"repository": {
 		"type": "git",
@@ -24,6 +25,7 @@
 		"mongodb": "^5"
 	},
 	"devDependencies": {
+		"@nesvet/conveyer": "^1",
 		"@nesvet/eslint-config": "^1"
 	}
 }
