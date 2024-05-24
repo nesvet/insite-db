@@ -9,5 +9,5 @@ $ npm install insite-db
 Or
 
 ```sh
-$ yarn add insite-db
+$ bun add insite-db
 ```
