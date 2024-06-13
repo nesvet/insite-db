@@ -6,7 +6,7 @@ export type InSiteDB = {
 	insiteCollections: Collections;
 } & Db;
 
-export type CollectionOptions = {
+export type InSiteCollectionOptions = {
 	fullDocument?: boolean;
 	jsonSchema?: Record<string, unknown>;
 	blockCompressor?: "none" | "snappy" | "zlib" | "zstd";

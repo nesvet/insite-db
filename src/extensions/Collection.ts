@@ -1,18 +1,11 @@
-import {
-	type ChangeStreamDocument,
-	Collection,
-	type CreateIndexesOptions,
-	type IndexSpecification
-} from "mongodb";
+import { type ChangeStreamDocument, Collection } from "mongodb";
 
-
-type IndexTuple = [ IndexSpecification, CreateIndexesOptions ];
 
 declare module "mongodb" {
-	interface Collection { // eslint-disable-line no-shadow
+	export interface Collection { // eslint-disable-line no-shadow
 		changeListeners?: Set<(listener: ChangeStreamDocument) => void>;
 		changeStream?: ChangeStream;
-		ensureIndexes(indexesToEnsure: IndexTuple[]): Promise<void>;
+		ensureIndexes(indexesToEnsure: [ IndexSpecification, CreateIndexesOptions? ][]): Promise<void>;
 	}
 }
 
@@ -29,3 +22,6 @@ Collection.prototype.ensureIndexes = async function (indexesToEnsure) {
 	} catch {}
 	
 };
+
+
+export { type ChangeStreamDocument, Collection as InSiteCollection } from "mongodb";

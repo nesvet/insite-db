@@ -1,5 +1,5 @@
 import type { ChangeStream, ChangeStreamDocument, Collection } from "mongodb";
-import type { CollectionOptions, InSiteDB } from "./types";
+import type { InSiteCollectionOptions, InSiteDB } from "./types";
 
 
 /* @this ChangeStream */
@@ -32,7 +32,7 @@ export class Collections extends Map<string, Collection> {
 	
 	[key: string]: Collection | unknown;
 	
-	async ensure(name: string, options: CollectionOptions = {}) {
+	async ensure(name: string, options: InSiteCollectionOptions = {}) {
 		
 		const { db } = this;
 		
