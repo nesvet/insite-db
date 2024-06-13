@@ -1,8 +1,9 @@
 import { MongoClient } from "mongodb";
 import { Collections } from "./Collections";
+import type { InSiteDB } from "./types";
 
 
-export async function connect(url, name) {
+export async function connect(url: string, name: string) {
 	
 	if (/localhost/.test(url))
 		url = url.replace(/localhost/, "127.0.0.1");
@@ -11,7 +12,7 @@ export async function connect(url, name) {
 	
 	try {
 		await client.connect();
-		console.info("🌿 Mongo Client connected to", url.replace(/(?<=\/\/)[^:]+?:[^@]+@/, "").replace(/(?:\/|\?)[^/]*$/, ""));
+		console.info("🌿 Mongo Client connected to", url.replace(/(?<=\/\/)[^:]+?:[^@]+@/, "").replace(/[/?][^/]*$/, ""));
 	} catch (error) {
 		console.error("🌿❗️ Mongo Client connection: ", error);
 	}
@@ -23,7 +24,7 @@ export async function connect(url, name) {
 		.on("reconnect", () => console.info("🌿 Mongo DB reconnected"))
 		.on("timeout", () => console.error("🌿❗️ Mongo DB timeout"));
 	
-	const db = client.db(name);
+	const db = client.db(name) as InSiteDB;
 	
 	const collections = new Collections(db);
 	
