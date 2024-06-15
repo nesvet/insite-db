@@ -2,9 +2,9 @@ import { type ChangeStreamDocument, Collection } from "mongodb";
 
 
 declare module "mongodb" {
-	export interface Collection { // eslint-disable-line no-shadow
-		changeListeners?: Set<(listener: ChangeStreamDocument) => void>;
-		changeStream?: ChangeStream;
+	export interface Collection<TSchema> { // eslint-disable-line no-shadow
+		changeListeners?: Set<(listener: ChangeStreamDocument<TSchema>) => void>;
+		changeStream?: ChangeStream<TSchema>;
 		ensureIndexes(indexesToEnsure: [ IndexSpecification, CreateIndexesOptions? ][]): Promise<void>;
 	}
 }
