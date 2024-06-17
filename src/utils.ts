@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 
 
-export function StringId() {
+export function newObjectIdString() {
 	return (new ObjectId()).toString();
 }
