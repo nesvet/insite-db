@@ -1,4 +1,4 @@
-export type { Collections } from "./Collections";
+export type { Collections as InSiteCollections } from "./Collections";
 export * from "./connect";
 export * from "./extensions";
 export * from "./types";
