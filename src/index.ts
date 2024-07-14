@@ -1,3 +1,4 @@
+export type { Collections } from "./Collections";
 export * from "./connect";
 export * from "./extensions";
 export * from "./types";
