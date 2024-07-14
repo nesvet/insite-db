@@ -1,3 +1,4 @@
+import type { JSONSchema7 } from "json-schema";
 import type { CreateIndexesOptions, Db, IndexSpecification } from "mongodb";
 import type { Collections } from "./Collections";
 
@@ -6,7 +7,7 @@ export type InSiteDB = {
 	insiteCollections: Collections;
 } & Db;
 
-export type InSiteCollectionSchema = Record<string, unknown>;
+export type InSiteCollectionSchema = JSONSchema7;
 
 export type InSiteCollectionOptions = {
 	fullDocument?: boolean;

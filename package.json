@@ -1,6 +1,6 @@
 {
   "name": "insite-db",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "MongoDB for inSite",
   "type": "module",
   "main": "./dist/index.js",
@@ -28,6 +28,7 @@
   "devDependencies": {
     "@nesvet/conveyer": "^2.2.1",
     "@nesvet/eslint-config": "^2.0.23",
+    "@types/json-schema": "^7.0.15",
     "@types/node": "^20.14.10"
   }
 }
