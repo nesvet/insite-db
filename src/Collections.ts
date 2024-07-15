@@ -1,4 +1,5 @@
-import type { ChangeStream, ChangeStreamDocument, Collection } from "mongodb";
+import type { ChangeStream, ChangeStreamDocument, Document } from "mongodb";
+import type { InSiteCollection } from "./extensions";
 import type { InSiteCollectionOptions, InSiteDB } from "./types";
 
 
@@ -6,21 +7,21 @@ import type { InSiteCollectionOptions, InSiteDB } from "./types";
 function handleChangeStreamChange(this: ChangeStream, next: ChangeStreamDocument) {
 	
 	if (process.env.NODE_ENV === "development")
-		console.log("Change stream change", (this.parent as Collection).collectionName, next);
+		console.log("Change stream change", (this.parent as InSiteCollection).collectionName, next);
 	
-	for (const listener of (this.parent as Collection).changeListeners!)
+	for (const listener of (this.parent as InSiteCollection).changeListeners!)
 		listener(next);
 	
 }
 
 /* @this ChangeStream */
 function handleChangeStreamError(this: ChangeStream, error: Error) {
-	console.error(`🌿❗️ Mongo ${(this.parent as Collection).collectionName} Change Stream:\n`, error.stack);
+	console.error(`🌿❗️ Mongo ${(this.parent as InSiteCollection).collectionName} Change Stream:\n`, error.stack);
 	
 }
 
 
-export class Collections extends Map<string, Collection> {
+export class Collections extends Map<string, InSiteCollection> {
 	constructor(db: InSiteDB) {
 		super();
 		
@@ -30,9 +31,9 @@ export class Collections extends Map<string, Collection> {
 	
 	db: InSiteDB;
 	
-	[key: string]: Collection | unknown;
+	[key: string]: InSiteCollection | unknown;
 	
-	async ensure(name: string, options: InSiteCollectionOptions = {}) {
+	async ensure<Doc extends Document>(name: string, options: InSiteCollectionOptions = {}) {
 		
 		const { db } = this;
 		
@@ -69,7 +70,7 @@ export class Collections extends Map<string, Collection> {
 				...options.jsonSchema && { validator: { $jsonSchema: options.jsonSchema } }
 			});
 		
-		return collection;
+		return collection as unknown as InSiteCollection<Doc>;
 	}
 	
 }
