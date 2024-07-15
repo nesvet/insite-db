@@ -1,4 +1,4 @@
-import { type ChangeStreamDocument, Collection } from "mongodb";
+import { type ChangeStreamDocument, Collection, type Document } from "mongodb";
 import { InSiteCollectionIndexes } from "../types";
 
 
@@ -25,7 +25,6 @@ Collection.prototype.ensureIndexes = async function (indexesToEnsure) {
 };
 
 
-export {
-	type ChangeStreamDocument,
-	Collection as InSiteCollection
-} from "mongodb";
+export type InSiteCollection<Doc extends Document = Document> = Collection<Doc>;
+
+export type InSiteWatchedCollection<Doc extends Document = Document> = Collection<Doc> & Required<Pick<Collection<Doc>, "changeListeners" | "changeStream">>;

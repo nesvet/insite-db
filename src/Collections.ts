@@ -1,22 +1,22 @@
 import type { ChangeStream, ChangeStreamDocument, Document } from "mongodb";
-import type { InSiteCollection } from "./extensions";
+import type { InSiteCollection, InSiteWatchedCollection } from "./extensions";
 import type { InSiteCollectionOptions, InSiteDB } from "./types";
 
 
-/* @this ChangeStream */
+/** @this ChangeStream */
 function handleChangeStreamChange(this: ChangeStream, next: ChangeStreamDocument) {
 	
 	if (process.env.NODE_ENV === "development")
-		console.log("Change stream change", (this.parent as InSiteCollection).collectionName, next);
+		console.log("Change stream change", (this.parent as InSiteWatchedCollection).collectionName, next);
 	
-	for (const listener of (this.parent as InSiteCollection).changeListeners!)
+	for (const listener of (this.parent as InSiteWatchedCollection).changeListeners!)
 		listener(next);
 	
 }
 
-/* @this ChangeStream */
+/** @this ChangeStream */
 function handleChangeStreamError(this: ChangeStream, error: Error) {
-	console.error(`🌿❗️ Mongo ${(this.parent as InSiteCollection).collectionName} Change Stream:\n`, error.stack);
+	console.error(`🌿❗️ Mongo ${(this.parent as InSiteWatchedCollection).collectionName} Change Stream:\n`, error.stack);
 	
 }
 
@@ -70,7 +70,11 @@ export class Collections extends Map<string, InSiteCollection> {
 				...options.jsonSchema && { validator: { $jsonSchema: options.jsonSchema } }
 			});
 		
-		return collection as unknown as InSiteCollection<Doc>;
+		return (
+			options.watch === false ?
+				collection as unknown as InSiteCollection<Doc> :
+				collection as unknown as InSiteWatchedCollection<Doc>
+		);
 	}
 	
 }
