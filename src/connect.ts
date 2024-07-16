@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { Collections } from "./Collections";
+import { InSiteCollections } from "./Collections";
 import type { InSiteDB } from "./types";
 
 
@@ -26,7 +26,7 @@ export async function connect(url: string, name: string) {
 	
 	const db = client.db(name) as InSiteDB;
 	
-	const collections = new Collections(db);
+	const collections = new InSiteCollections(db);
 	
 	db.insiteCollections = collections;
 	

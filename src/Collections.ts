@@ -1,6 +1,10 @@
 import type { ChangeStream, ChangeStreamDocument, Document } from "mongodb";
-import type { InSiteCollection, InSiteWatchedCollection } from "./extensions";
-import type { InSiteCollectionOptions, InSiteDB } from "./types";
+import type {
+	InSiteCollection,
+	InSiteCollectionOptions,
+	InSiteDB,
+	InSiteWatchedCollection
+} from "./types";
 
 
 /** @this ChangeStream */
@@ -21,7 +25,7 @@ function handleChangeStreamError(this: ChangeStream, error: Error) {
 }
 
 
-export class Collections extends Map<string, InSiteCollection> {
+export class InSiteCollections extends Map<string, InSiteCollection> {
 	constructor(db: InSiteDB) {
 		super();
 		
@@ -33,7 +37,9 @@ export class Collections extends Map<string, InSiteCollection> {
 	
 	[key: string]: InSiteCollection | unknown;
 	
-	async ensure<Doc extends Document>(name: string, options: InSiteCollectionOptions = {}) {
+	async ensure<Doc extends Document>(name: string, options: { watch: false } & InSiteCollectionOptions): Promise<InSiteCollection<Doc>>;
+	async ensure<Doc extends Document>(name: string, options: { watch?: true } & InSiteCollectionOptions): Promise<InSiteWatchedCollection<Doc>>;
+	async ensure<Doc extends Document>(name: string, options: InSiteCollectionOptions = {}): Promise<InSiteCollection<Doc> | InSiteWatchedCollection<Doc>> {
 		
 		const { db } = this;
 		
