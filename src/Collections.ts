@@ -39,7 +39,7 @@ export class InSiteCollections extends Map<string, InSiteCollection> {
 	
 	async ensure<Doc extends Document>(name: string, options: { watch: false } & InSiteCollectionOptions): Promise<InSiteCollection<Doc>>;
 	async ensure<Doc extends Document>(name: string, options: { watch?: true } & InSiteCollectionOptions): Promise<InSiteWatchedCollection<Doc>>;
-	async ensure<Doc extends Document>(name: string, options: InSiteCollectionOptions = {}): Promise<InSiteCollection<Doc> | InSiteWatchedCollection<Doc>> {
+	async ensure(name: string, options: InSiteCollectionOptions = {}) {
 		
 		const { db } = this;
 		
@@ -76,11 +76,7 @@ export class InSiteCollections extends Map<string, InSiteCollection> {
 				...options.jsonSchema && { validator: { $jsonSchema: options.jsonSchema } }
 			});
 		
-		return (
-			options.watch === false ?
-				collection as unknown as InSiteCollection<Doc> :
-				collection as unknown as InSiteWatchedCollection<Doc>
-		);
+		return collection;
 	}
 	
 }
