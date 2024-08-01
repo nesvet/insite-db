@@ -4,10 +4,15 @@ import type {
 	CreateIndexesOptions,
 	Db,
 	Document,
-	IndexSpecification
+	IndexSpecification,
+	MongoClientOptions
 } from "mongodb";
-import type { InSiteCollections } from "./Collections";
 
+
+export type Options = {
+	url: string;
+	name: string;
+} & MongoClientOptions;
 
 export type InSiteDB = Db;
 

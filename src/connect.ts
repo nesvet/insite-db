@@ -1,14 +1,17 @@
 import { MongoClient } from "mongodb";
 import { InSiteCollections } from "./Collections";
-import type { InSiteDB } from "./types";
+import type { InSiteDB, Options } from "./types";
 
 
-export async function connect(url: string, name: string) {
+export async function connect({ url, name, ...mongoClientOptions }: Options) {
 	
 	if (/localhost/.test(url))
 		url = url.replace(/localhost/, "127.0.0.1");
 	
-	const client = new MongoClient(url, { maxPoolSize: 100 });
+	const client = new MongoClient(url, {
+		maxPoolSize: 100,
+		...mongoClientOptions
+	});
 	
 	try {
 		await client.connect();
