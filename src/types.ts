@@ -9,9 +9,7 @@ import type {
 import type { InSiteCollections } from "./Collections";
 
 
-export type InSiteDB = {
-	insiteCollections: InSiteCollections;
-} & Db;
+export type InSiteDB = Db;
 
 export type InSiteCollectionSchema = JSONSchema4;
 

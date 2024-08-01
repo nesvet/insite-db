@@ -28,8 +28,6 @@ export async function connect(url: string, name: string) {
 	
 	const collections = new InSiteCollections(db);
 	
-	db.insiteCollections = collections;
-	
 	return {
 		client,
 		db,
