@@ -27,9 +27,9 @@
   },
   "devDependencies": {
     "@nesvet/conveyer": "^2.2.4",
-    "@nesvet/eslint-config": "^2.0.24",
+    "@nesvet/eslint-config": "^2.0.25",
     "@types/json-schema": "^7.0.15",
-    "@types/node": "^22.3.0",
+    "@types/node": "^22.5.1",
     "typescript": "^5.5.4"
   }
 }
