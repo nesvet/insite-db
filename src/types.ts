@@ -21,6 +21,7 @@ export type InSiteCollectionSchema = JSONSchema4;
 export type InSiteCollectionOptions = {
 	fullDocument?: boolean;
 	jsonSchema?: InSiteCollectionSchema;
+	indexes?: InSiteCollectionIndexes;
 	blockCompressor?: "none" | "snappy" | "zlib" | "zstd";
 	watch?: boolean;
 };

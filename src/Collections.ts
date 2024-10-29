@@ -76,6 +76,9 @@ export class InSiteCollections extends Map<string, InSiteCollection> {
 				...options.jsonSchema && { validator: { $jsonSchema: options.jsonSchema } }
 			});
 		
+		if (options.indexes)
+			await collection.ensureIndexes(options.indexes);
+		
 		return collection;
 	}
 	
