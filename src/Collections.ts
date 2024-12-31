@@ -11,7 +11,7 @@ import type {
 function handleChangeStreamChange(this: ChangeStream, next: ChangeStreamDocument) {
 	
 	if (process.env.NODE_ENV === "development")
-		console.log("Change stream change", (this.parent as InSiteWatchedCollection).collectionName, next);
+		console.log("🎏 Change stream change", (this.parent as InSiteWatchedCollection).collectionName, next);
 	
 	for (const listener of (this.parent as InSiteWatchedCollection).changeListeners!)
 		listener(next);
