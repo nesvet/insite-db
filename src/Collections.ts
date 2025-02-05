@@ -11,7 +11,7 @@ import type {
 function handleChangeStreamChange(this: ChangeStream, next: ChangeStreamDocument) {
 	
 	if (process.env.NODE_ENV === "development")
-		console.log("🎏 Change stream change", (this.parent as InSiteWatchedCollection).collectionName, next);
+		console.info("🎏 Change stream change", (this.parent as InSiteWatchedCollection).collectionName, next);
 	
 	for (const listener of (this.parent as InSiteWatchedCollection).changeListeners!)
 		listener(next);
@@ -37,8 +37,8 @@ export class InSiteCollections extends Map<string, InSiteCollection> {
 	
 	[key: string]: InSiteCollection | unknown;
 	
-	async ensure<Doc extends Document>(name: string, options: { watch: false } & InSiteCollectionOptions): Promise<InSiteCollection<Doc>>;
-	async ensure<Doc extends Document>(name: string, options?: { watch?: true } & InSiteCollectionOptions): Promise<InSiteWatchedCollection<Doc>>;
+	async ensure<Doc extends Document>(name: string, options: InSiteCollectionOptions & { watch: false }): Promise<InSiteCollection<Doc>>;
+	async ensure<Doc extends Document>(name: string, options?: InSiteCollectionOptions & { watch?: true }): Promise<InSiteWatchedCollection<Doc>>;
 	async ensure(name: string, options: InSiteCollectionOptions = {}) {
 		
 		const { db } = this;
