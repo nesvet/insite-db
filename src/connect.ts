@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
-import { InSiteCollections } from "./Collections";
-import type { InSiteDB, Options } from "./types";
+import { Collections } from "./Collections";
+import type { DB, Options } from "./types";
 
 
 export async function connect({ url, name, ...mongoClientOptions }: Options) {
@@ -27,9 +27,9 @@ export async function connect({ url, name, ...mongoClientOptions }: Options) {
 		.on("reconnect", () => console.info("🌿 Mongo DB reconnected"))
 		.on("timeout", () => console.error("🌿❗️ Mongo DB timeout"));
 	
-	const db = client.db(name) as InSiteDB;
+	const db = client.db(name) as DB;
 	
-	const collections = new InSiteCollections(db);
+	const collections = new Collections(db);
 	
 	return {
 		client,

@@ -9,25 +9,23 @@ import type {
 } from "mongodb";
 
 
-export type Options = {
+export type Options = MongoClientOptions & {
 	url: string;
 	name: string;
-} & MongoClientOptions;
+};
 
-export type InSiteDB = Db;
+export type DB = Db;
 
-export type InSiteCollectionSchema = JSONSchema4;
+export type CollectionSchema = JSONSchema4;
 
-export type InSiteCollectionOptions = {
+export type EnsureOptions = {
 	fullDocument?: boolean;
-	jsonSchema?: InSiteCollectionSchema;
-	indexes?: InSiteCollectionIndexes;
+	jsonSchema?: CollectionSchema;
+	indexes?: CollectionIndexes;
 	blockCompressor?: "none" | "snappy" | "zlib" | "zstd";
 	watch?: boolean;
 };
 
-export type InSiteCollectionIndexes = [ IndexSpecification, CreateIndexesOptions? ][];
+export type CollectionIndexes = [ IndexSpecification, CreateIndexesOptions? ][];
 
-export type InSiteCollection<Doc extends Document = Document> = Collection<Doc>;
-
-export type InSiteWatchedCollection<Doc extends Document = Document> = Collection<Doc> & Required<Pick<Collection<Doc>, "changeListeners" | "changeStream">>;
+export type WatchedCollection<Doc extends Document = Document> = Collection<Doc> & Required<Pick<Collection<Doc>, "changeListeners" | "changeStream">>;

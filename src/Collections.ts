@@ -1,45 +1,45 @@
-import type { ChangeStream, ChangeStreamDocument, Document } from "mongodb";
 import type {
-	InSiteCollection,
-	InSiteCollectionOptions,
-	InSiteDB,
-	InSiteWatchedCollection
-} from "./types";
+	ChangeStream,
+	ChangeStreamDocument,
+	Collection,
+	Document
+} from "mongodb";
+import type { DB, EnsureOptions, WatchedCollection } from "./types";
 
 
 /** @this ChangeStream */
 function handleChangeStreamChange(this: ChangeStream, next: ChangeStreamDocument) {
 	
 	if (process.env.NODE_ENV === "development")
-		console.info("🎏 Change stream change", (this.parent as InSiteWatchedCollection).collectionName, next);
+		console.info("🎏 Change stream change", (this.parent as WatchedCollection).collectionName, next);
 	
-	for (const listener of (this.parent as InSiteWatchedCollection).changeListeners!)
+	for (const listener of (this.parent as WatchedCollection).changeListeners!)
 		listener(next);
 	
 }
 
 /** @this ChangeStream */
 function handleChangeStreamError(this: ChangeStream, error: Error) {
-	console.error(`🌿❗️ Mongo ${(this.parent as InSiteWatchedCollection).collectionName} Change Stream:\n`, error.stack);
+	console.error(`🌿❗️ Mongo ${(this.parent as WatchedCollection).collectionName} Change Stream:\n`, error.stack);
 	
 }
 
 
-export class InSiteCollections extends Map<string, InSiteCollection> {
-	constructor(db: InSiteDB) {
+export class Collections extends Map<string, Collection> {
+	constructor(db: DB) {
 		super();
 		
 		this.db = db;
 		
 	}
 	
-	db: InSiteDB;
+	db: DB;
 	
-	[key: string]: InSiteCollection | unknown;
+	[key: string]: Collection | unknown;
 	
-	async ensure<Doc extends Document>(name: string, options: InSiteCollectionOptions & { watch: false }): Promise<InSiteCollection<Doc>>;
-	async ensure<Doc extends Document>(name: string, options?: InSiteCollectionOptions & { watch?: true }): Promise<InSiteWatchedCollection<Doc>>;
-	async ensure(name: string, options: InSiteCollectionOptions = {}) {
+	async ensure<Doc extends Document>(name: string, options: EnsureOptions & { watch: false }): Promise<Collection<Doc>>;
+	async ensure<Doc extends Document>(name: string, options?: EnsureOptions & { watch?: true }): Promise<WatchedCollection<Doc>>;
+	async ensure(name: string, options: EnsureOptions = {}) {
 		
 		const { db } = this;
 		
