@@ -19,9 +19,9 @@ export type DB = Db;
 
 export type CollectionSchema = JSONSchema4;
 
-export type EnsureOptions = {
+export type CollectionOptions = {
 	fullDocument?: boolean;
-	jsonSchema?: CollectionSchema;
+	schema?: CollectionSchema;
 	indexes?: CollectionIndexes;
 	blockCompressor?: "none" | "snappy" | "zlib" | "zstd";
 	watch?: boolean;

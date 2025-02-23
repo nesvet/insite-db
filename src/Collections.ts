@@ -37,10 +37,11 @@ export class Collections extends Map<string, Collection> {
 				collection = db.collection(name);
 			else {
 				collection = await db.createCollection(name, {
-					...options.jsonSchema && { validator: { $jsonSchema: options.jsonSchema } },
+					...options.schema && { validator: { $jsonSchema: options.schema } },
 					...options.blockCompressor && { storageEngine: { wiredTiger: { configString: `block_compressor=${options.blockCompressor}` } } }
 				});
-				delete options.jsonSchema;
+				
+				delete options.schema;
 				delete options.blockCompressor;
 			}
 			
