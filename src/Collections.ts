@@ -16,9 +16,9 @@ export class Collections extends Map<string, Collection> {
 	
 	[key: string]: Collection | unknown;
 	
-	async ensure<Doc extends Document>(name: string, options: EnsureOptions & { watch: false }): Promise<Collection<Doc>>;
-	async ensure<Doc extends Document>(name: string, options?: EnsureOptions & { watch?: true }): Promise<WatchedCollection<Doc>>;
-	async ensure(name: string, options: EnsureOptions = {}) {
+	async ensure<Doc extends Document>(name: string, options: CollectionOptions & { watch: false }): Promise<Collection<Doc>>;
+	async ensure<Doc extends Document>(name: string, options?: CollectionOptions): Promise<WatchedCollection<Doc>>;
+	async ensure(name: string, options: CollectionOptions = {}) {
 		
 		const { db } = this;
 		
