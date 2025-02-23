@@ -1,3 +1,7 @@
+import { isDeepStrictEqual } from "node:util";
+import { Collection } from "mongodb";
+import { omit } from "@nesvet/n";
+import type { ChangeStreamListener, CollectionIndexes, WatchedCollection } from "../types";
 
 
 const ACTUAL_INDEX_VERSION = 2;
@@ -9,8 +13,24 @@ declare module "mongodb" {
 		/** Ensures the presence of `indexes`. */
 		ensureIndexes(indexes: CollectionIndexes): Promise<void>;
 		
+		/** Change Stream, watching for new changes in this collection. */
 		changeStream?: ChangeStream<TSchema>;
-		ensureIndexes(indexesToEnsure: CollectionIndexes): Promise<void>;
+		
+		/** Adds the `listener` function to the end of the listeners array for the event `change`. */
+		onChange?(listener: ChangeStreamListener<TSchema>): this;
+		
+		/** Adds the `listener` function to the *beginning* of the listeners array for the event `change`. */
+		prependChange?(listener: ChangeStreamListener<TSchema>): this;
+		
+		/** Adds the **one-time** `listener` function to the end of the listeners array for the event `change`. */
+		onceChange?(listener: ChangeStreamListener<TSchema>): this;
+		
+		/** Adds the **one-time** function to the *beginning* of the listeners array for the event `change`. */
+		prependOnceChange?(listener: ChangeStreamListener<TSchema>): this;
+		
+		/** Removes the `listener` from the listener array for the event `change`. */
+		removeChangeListener?(listener: ChangeStreamListener<TSchema>): this;
+		
 	}
 }
 
@@ -43,4 +63,32 @@ Collection.prototype.ensureIndexes = async function (indexes) {
 	
 };
 
+Collection.prototype.onChange = function (this: WatchedCollection, listener) {
+	this.changeStream.on("change", listener);
+	
+	return this;
+};
+
+Collection.prototype.prependChange = function (this: WatchedCollection, listener) {
+	this.changeStream.prependListener("change", listener);
+	
+	return this;
+};
+
+Collection.prototype.onceChange = function (this: WatchedCollection, listener) {
+	this.changeStream.once("change", listener);
+	
+	return this;
+};
+
+Collection.prototype.prependOnceChange = function (this: WatchedCollection, listener) {
+	this.changeStream.prependOnceListener("change", listener);
+	
+	return this;
+};
+
+Collection.prototype.removeChangeListener = function (this: WatchedCollection, listener) {
+	this.changeStream.removeListener("change", listener);
+	
+	return this;
 };

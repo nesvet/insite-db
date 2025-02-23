@@ -1,5 +1,6 @@
 import type { JSONSchema4 } from "json-schema";
 import type {
+	ChangeStreamDocument,
 	Collection,
 	CreateIndexesOptions,
 	Db,
@@ -28,4 +29,8 @@ export type EnsureOptions = {
 
 export type CollectionIndexes = [ IndexSpecification, CreateIndexesOptions? ][];
 
-export type WatchedCollection<Doc extends Document = Document> = Collection<Doc> & Required<Pick<Collection<Doc>, "changeListeners" | "changeStream">>;
+export type ChangeStreamListener<TSchema extends Document> = (listener: ChangeStreamDocument<TSchema>) => void;
+
+export type WatchedCollection<Doc extends Document = Document> =
+	Collection<Doc> &
+	Required<Pick<Collection<Doc>, "changeStream" | "onceChange" | "onChange" | "prependChange" | "prependOnceChange" | "removeChangeListener">>;

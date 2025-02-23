@@ -1,28 +1,7 @@
-import type {
-	ChangeStream,
-	ChangeStreamDocument,
-	Collection,
-	Document
-} from "mongodb";
-import type { DB, EnsureOptions, WatchedCollection } from "./types";
-
-
-/** @this ChangeStream */
-function handleChangeStreamChange(this: ChangeStream, next: ChangeStreamDocument) {
-	
-	if (process.env.NODE_ENV === "development")
-		console.info("🎏 Change stream change", (this.parent as WatchedCollection).collectionName, next);
-	
-	for (const listener of (this.parent as WatchedCollection).changeListeners!)
-		listener(next);
-	
-}
-
-/** @this ChangeStream */
-function handleChangeStreamError(this: ChangeStream, error: Error) {
-	console.error(`🌿❗️ Mongo ${(this.parent as WatchedCollection).collectionName} Change Stream:\n`, error.stack);
-	
-}
+import type { Collection, Document } from "mongodb";
+import { captureStackTrace } from "@nesvet/n";
+import { printChangeStreamChangeDetails, printChangeStreamError } from "./utils";
+import type { CollectionOptions, DB, WatchedCollection } from "./types";
 
 
 export class Collections extends Map<string, Collection> {
@@ -55,6 +34,17 @@ export class Collections extends Map<string, Collection> {
 				});
 				delete options.jsonSchema;
 				delete options.blockCompressor;
+			}
+			
+			if (options.watch !== false) {
+				const changeStream = collection.watch(undefined, { fullDocument: options.fullDocument === false ? undefined : "updateLookup" });
+				
+				if (process.env.NODE_ENV === "development" ? options.quiet !== true : !options.quiet)
+					changeStream.on("change", printChangeStreamChangeDetails);
+				
+				changeStream.on("error", printChangeStreamError);
+				
+				collection.changeStream = changeStream;
 			}
 			
 			this.set(name, collection);
