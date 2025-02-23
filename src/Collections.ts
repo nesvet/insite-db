@@ -14,6 +14,11 @@ export class Collections extends Map<string, Collection> {
 	
 	db: DB;
 	
+	#awaiting = new Map<string, Promise<Collection>>();
+	
+	#schemaSet = new Map<string, string>();
+	#indexesSet = new Map<string, string>();
+	
 	[key: string]: Collection | unknown;
 	
 	async ensure<Doc extends Document>(name: string, options: CollectionOptions & { watch: false }): Promise<Collection<Doc>>;
@@ -22,9 +27,12 @@ export class Collections extends Map<string, Collection> {
 		
 		const { db } = this;
 		
-		let collection = this.get(name);
+		let collection = this.get(name) ?? await this.#awaiting.get(name);
 		
 		if (!collection) {
+			const { promise, resolve } = Promise.withResolvers<Collection>();
+			this.#awaiting.set(name, promise);
+			
 			if ((await db.listCollections({ name }, { nameOnly: true }).toArray()).length)
 				collection = db.collection(name);
 			else {
@@ -50,24 +58,43 @@ export class Collections extends Map<string, Collection> {
 			this.set(name, collection);
 			this[name] = collection;
 			
-			if (options.watch !== false) {
-				collection.changeListeners = new Set();
-				
-				collection.changeStream =
-					collection.watch(undefined, { fullDocument: options.fullDocument === false ? undefined : "updateLookup" })
-						.on("change", handleChangeStreamChange)
-						.on("error", handleChangeStreamError);
-			}
+			resolve(collection);
+			this.#awaiting.delete(name);
 		}
 		
-		if (options.jsonSchema)
-			await db.command({
-				collMod: name,
-				...options.jsonSchema && { validator: { $jsonSchema: options.jsonSchema } }
-			});
+		if (options.schema)
+			if (this.#schemaSet.has(name))
+				console.warn(
+					`🌿⚠️  Attempt to set schema for the \x1B[1m${name}\x1B[22m collection at\n` +
+					`${captureStackTrace()}\n` +
+					"\n" +
+					"    Which has already been set at\n" +
+					`${this.#schemaSet.get(name)}\n` +
+					"\n" +
+					"    Skipping"
+				);
+			else {
+				this.#schemaSet.set(name, captureStackTrace());
+				
+				await db.command({ collMod: name, validator: { $jsonSchema: options.schema } });
+			}
 		
 		if (options.indexes)
-			await collection.ensureIndexes(options.indexes);
+			if (this.#indexesSet.has(name))
+				console.warn(
+					`🌿⚠️  Attempt to set indexes for the \x1B[1m${name}\x1B[22m collection at\n` +
+					`${captureStackTrace()}\n` +
+					"\n" +
+					"    Which have already been set at\n" +
+					`${this.#indexesSet.get(name)}\n` +
+					"\n" +
+					"    Skipping"
+				);
+			else {
+				this.#indexesSet.set(name, captureStackTrace());
+				
+				await collection.ensureIndexes(options.indexes);
+			}
 		
 		return collection;
 	}
