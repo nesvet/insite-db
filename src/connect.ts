@@ -15,17 +15,17 @@ export async function connect({ url, name, ...mongoClientOptions }: Options) {
 	
 	try {
 		await client.connect();
-		console.info("🌿 Mongo Client connected to", url.replace(/(?<=\/\/)[^:]+?:[^@]+@/, "").replace(/[/?][^/]*$/, ""));
+		console.info("🌿 MongoDB Client connected to", url.replace(/(?<=\/\/)[^:]+?:[^@]+@/, "").replace(/[/?][^/]*$/, ""));
 	} catch (error) {
-		console.error("🌿❗️ Mongo Client connection: ", error);
+		console.error("🌿❗️ MongoDB Client connection: ", error);
 	}
 	
 	client
-		.on("close", () => console.error("🌿❗️ Mongo DB socket closed"))
-		.on("error", error => console.error("🌿❗️ Mongo DB:", error))
-		.on("parseError", error => console.error("🌿❗️ Mongo DB parse:", error))
-		.on("reconnect", () => console.info("🌿 Mongo DB reconnected"))
-		.on("timeout", () => console.error("🌿❗️ Mongo DB timeout"));
+		.on("close", () => console.error("🌿❗️ MongoDB socket closed"))
+		.on("error", error => console.error("🌿❗️ MongoDB:", error))
+		.on("parseError", error => console.error("🌿❗️ MongoDB parse:", error))
+		.on("reconnect", () => console.info("🌿 MongoDB reconnected"))
+		.on("timeout", () => console.error("🌿❗️ MongoDB timeout"));
 	
 	const db = client.db(name) as DB;
 	
