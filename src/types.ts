@@ -25,6 +25,7 @@ export type CollectionOptions = {
 	indexes?: CollectionIndexes;
 	blockCompressor?: "none" | "snappy" | "zlib" | "zstd";
 	watch?: boolean;
+	quiet?: boolean;
 };
 
 export type CollectionIndexes = [ IndexSpecification, CreateIndexesOptions? ][];
