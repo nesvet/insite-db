@@ -18,7 +18,7 @@ export function printChangeStreamChangeDetails(this: ChangeStream, next: ChangeS
 			break;
 		
 		case "update":
-			messages.push("updateDescription:", next.updateDescription);
+			messages.push("_id:", next.documentKey._id, "\n", "updateDescription:", next.updateDescription);
 			break;
 		
 		case "delete":
