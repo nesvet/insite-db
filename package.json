@@ -1,36 +1,36 @@
 {
-  "name": "insite-db",
+	"name": "insite-db",
   "version": "2.2.3",
-  "description": "MongoDB for inSite",
-  "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "packageManager": "bun@1.2.9",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "bun .conveyer.js",
-    "postbuild": "tsc -p ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nesvet/insite-db.git"
-  },
-  "keywords": [
-    "insite",
-    "db",
-    "mongodb"
-  ],
-  "author": "Eugene Nesvetaev <dev@nesvet.dev> (https://nesvet.dev/)",
-  "license": "MIT",
-  "dependencies": {
-    "@nesvet/n": "^1.1.29",
-    "mongodb": "^6.15.0"
-  },
-  "devDependencies": {
-    "@nesvet/conveyer": "^2.5.1",
-    "@nesvet/eslint-config": "^2.0.52",
-    "@types/json-schema": "^7.0.15",
-    "@types/node": "^22.14.1",
-    "typescript": "^5.8.3"
-  }
+	"description": "MongoDB for inSite",
+	"type": "module",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"packageManager": "bun@1.2.11",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "bun .conveyer.js",
+		"postbuild": "tsc -p ."
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nesvet/insite-db.git"
+	},
+	"keywords": [
+		"insite",
+		"db",
+		"mongodb"
+	],
+	"author": "Eugene Nesvetaev <dev@nesvet.dev> (https://nesvet.dev/)",
+	"license": "MIT",
+	"dependencies": {
+		"@nesvet/n": "^1.2.0",
+		"mongodb": "^6.16.0"
+	},
+	"devDependencies": {
+		"@nesvet/conveyer": "^2.5.2",
+		"@nesvet/eslint-config": "^2.1.1",
+		"@types/json-schema": "^7.0.15",
+		"@types/node": "^22.15.3",
+		"typescript": "^5.8.3"
+	}
 }
