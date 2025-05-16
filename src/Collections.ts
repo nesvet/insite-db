@@ -19,7 +19,7 @@ export class Collections extends Map<string, Collection> {
 	#schemaSet = new Map<string, string>();
 	#indexesSet = new Map<string, string>();
 	
-	[key: string]: Collection | unknown;
+	[key: string]: unknown;
 	
 	async ensure<Doc extends Document>(name: string, options: CollectionOptions & { watch: false }): Promise<Collection<Doc>>;
 	async ensure<Doc extends Document>(name: string, options?: CollectionOptions): Promise<WatchedCollection<Doc>>;

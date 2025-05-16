@@ -1,5 +1,5 @@
 import { isDeepStrictEqual } from "node:util";
-import { Collection } from "mongodb";
+import { Collection, type ChangeStream } from "mongodb";
 import { omit } from "@nesvet/n";
 import type { ChangeStreamListener, CollectionIndexes, WatchedCollection } from "../types";
 
