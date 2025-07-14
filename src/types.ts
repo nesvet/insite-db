@@ -8,16 +8,18 @@ import type {
 	IndexSpecification,
 	MongoClientOptions
 } from "mongodb";
+import type { Collections } from "./Collections";
 
-
-export type Options = MongoClientOptions & {
-	url: string;
-	name: string;
-};
 
 export type DB = Db;
 
 export type CollectionSchema = JSONSchema4;
+
+export type Options = MongoClientOptions & {
+	url: string;
+	name: string;
+	onConnect?: (collections: Collections, db: DB) => Promise<void>;
+};
 
 export type CollectionOptions = {
 	fullDocument?: boolean;
