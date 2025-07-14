@@ -1,6 +1,6 @@
 {
 	"name": "insite-db",
-	"version": "2.3.0",
+	"version": "2.3.3",
 	"description": "MongoDB for inSite",
 	"type": "module",
 	"main": "./dist/index.js",
