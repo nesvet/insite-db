@@ -33,34 +33,37 @@ export class Collections extends Map<string, Collection> {
 			const { promise, resolve } = Promise.withResolvers<Collection>();
 			this.#awaiting.set(name, promise);
 			
-			if ((await db.listCollections({ name }, { nameOnly: true }).toArray()).length)
-				collection = db.collection(name);
-			else {
-				collection = await db.createCollection(name, {
-					...options.schema && { validator: { $jsonSchema: options.schema } },
-					...options.blockCompressor && { storageEngine: { wiredTiger: { configString: `block_compressor=${options.blockCompressor}` } } }
-				});
+			try {
+				if ((await db.listCollections({ name }, { nameOnly: true }).toArray()).length)
+					collection = db.collection(name);
+				else {
+					collection = await db.createCollection(name, {
+						...options.schema && { validator: { $jsonSchema: options.schema } },
+						...options.blockCompressor && { storageEngine: { wiredTiger: { configString: `block_compressor=${options.blockCompressor}` } } }
+					});
+					
+					delete options.schema;
+					delete options.blockCompressor;
+				}
 				
-				delete options.schema;
-				delete options.blockCompressor;
+				if (options.watch !== false) {
+					const changeStream = collection.watch(undefined, { fullDocument: options.fullDocument === false ? undefined : "updateLookup" });
+					
+					if (process.env.NODE_ENV === "development" ? options.quiet !== true : !options.quiet)
+						changeStream.on("change", printChangeStreamChangeDetails);
+					
+					changeStream.on("error", printChangeStreamError);
+					
+					collection.changeStream = changeStream;
+				}
+				
+				this.set(name, collection);
+				this[name] = collection;
+				
+				resolve(collection);
+			} finally {
+				this.#awaiting.delete(name);
 			}
-			
-			if (options.watch !== false) {
-				const changeStream = collection.watch(undefined, { fullDocument: options.fullDocument === false ? undefined : "updateLookup" });
-				
-				if (process.env.NODE_ENV === "development" ? options.quiet !== true : !options.quiet)
-					changeStream.on("change", printChangeStreamChangeDetails);
-				
-				changeStream.on("error", printChangeStreamError);
-				
-				collection.changeStream = changeStream;
-			}
-			
-			this.set(name, collection);
-			this[name] = collection;
-			
-			resolve(collection);
-			this.#awaiting.delete(name);
 		}
 		
 		if (options.schema)
