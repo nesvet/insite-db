@@ -1,4 +1,5 @@
 import { ObjectId, type ChangeStream, type ChangeStreamDocument } from "mongodb";
+import { maskChangeStreamDocument } from "./masker";
 import type { WatchedCollection } from "./types";
 
 
@@ -8,6 +9,7 @@ export function newObjectIdString() {
 
 /** @this ChangeStream */
 export function printChangeStreamChangeDetails(this: ChangeStream, next: ChangeStreamDocument) {
+	next = maskChangeStreamDocument(next);
 	
 	const messages = [];
 	
